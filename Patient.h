@@ -10,20 +10,27 @@ using namespace std;
 
 #define nl '\n'
 
-class Patient : public Person {
+class Patient : public Person
+{
 public:
     // Empty Constructor
     Patient() : Person() {}
 
     // Parameterized Constructor: Passes data up to the Person constructor
-    Patient(int id, string name, int age, CaseType caseType) 
-        : Person(id, name, age, caseType) {}
+    Patient(int id, string name, int age, CaseType caseType)
+    {
+        this->id = id;
+        this->name = name;
+        this->age = age;
+        this->caseType = caseType;
+    }
 
     // Override Display
-    void display() const override {
+    void display() const override
+    {
         cout << "--- Patient Details ---" << nl;
         // Call the base class display() to print common info (ID, Name, Age)
-        Person::display(); 
+        Person::display();
         cout << "-----------------------" << nl;
     }
 };

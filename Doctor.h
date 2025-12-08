@@ -18,7 +18,12 @@ public:
 
     // Parameterized Constructor
     Doctor(int id, string name, int age, CaseType caseType)
-        : Person(id, name, age, caseType) {}
+    {
+        this->id = id;
+        this->name = name;
+        this->age = age;
+        this->caseType = caseType;
+    }
 
     // Override Display
     void display() const override
