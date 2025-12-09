@@ -41,18 +41,16 @@ public:
     void searchDoctorByDepartment();
     void showDoctorQueue();
 
-    // --- Core Workflow ---
-    // void treatPatient();
-    // void patientsCount();
-    // void doctorsCount();
-    // void displayPatients();
-    // void displayDoctors();
-
     // Main menu
     void printMainMenu();
     void patientManagement();
     void doctorManagement();
     void printExitScreen();
+    // void treatPatient();
+    // void patientsCount();
+    // void doctorsCount();
+    // void displayPatients();
+    // void displayDoctors();
 };
 
 #endif
