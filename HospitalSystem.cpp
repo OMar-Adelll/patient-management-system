@@ -4,8 +4,6 @@
 
 HospitalSystem::HospitalSystem()
 {
-    // Initialize the specialized lists for each department
-    // This prevents "Segmentation Faults" when accessing specific majors
     doctorsByMajor[GENERAL] = new DoctorList();
     doctorsByMajor[EMERGENCY] = new DoctorList();
     doctorsByMajor[ICU] = new DoctorList();
@@ -16,7 +14,6 @@ HospitalSystem::HospitalSystem()
 HospitalSystem::~HospitalSystem()
 {
     cout << "System shutting down... Cleaning up memory." << endl;
-    // Iterate through the map and delete every DoctorList to prevent memory leaks
     for (auto const &[key, listPtr] : doctorsByMajor)
     {
         delete listPtr;
@@ -28,42 +25,46 @@ HospitalSystem::~HospitalSystem()
 void HospitalSystem::addPatient()
 {
     cout << "\n=== REGISTER NEW PATIENT ===" << endl;
-    
+
+    int id;
     cout << "Enter ID: ";
-    int id = safe_input_int(1, 999999);
-    
-    cout << "Enter Name: ";
+    cin >> id;
+
     string name;
-    cin.ignore();
+    cout << "Enter Name: ";
+    cin.ignore(); // Clears the "Enter" key from the buffer
     getline(cin, name);
-    
+
+    int age;
     cout << "Enter Age: ";
-    int age = safe_input_int(0, 120);
+    cin >> age;
 
+    int type;
     cout << "Select Case Type:\n0:General, 1:Emergency, 2:ICU, 3:Pediatric, 4:Surgical\nChoice: ";
-    int type = safe_input_int(0, 4);
+    cin >> type;
 
-    // Create patient and add to Global Waiting Room
     Patient p(id, name, age, (CaseType)type);
     patientQueue.enqueue(p);
-    
+
     cout << "Success: Patient " << name << " added to Waiting Room." << endl;
 }
 
 void HospitalSystem::deletePatient()
 {
-    if (patientQueue.isEmpty()) {
+    if (patientQueue.isEmpty())
+    {
         cout << "Waiting room is empty." << endl;
         return;
     }
 
+    int id;
     cout << "Enter Patient ID to remove from Waiting Room: ";
-    int id = safe_input_int(1, 999999);
-    
-    // Note: This relies on the removeById(id) function in PatientQueue.h
+    cin >> id;
+
     Patient p = patientQueue.removeById(id);
-    
-    if (p.getId() != 0) {
+
+    if (p.getId() != 0)
+    {
         cout << "Patient " << p.getName() << " removed successfully." << endl;
     }
 }
@@ -80,76 +81,81 @@ void HospitalSystem::addDoctor()
 {
     cout << "\n=== HIRE NEW DOCTOR ===" << endl;
 
+    int id;
     cout << "Enter ID: ";
-    int id = safe_input_int(1, 999999);
+    cin >> id;
 
-    cout << "Enter Name: ";
     string name;
+    cout << "Enter Name: ";
     cin.ignore();
     getline(cin, name);
 
+    int age;
     cout << "Enter Age: ";
-    int age = safe_input_int(22, 100);
+    cin >> age;
 
+    int type;
     cout << "Select Specialization:\n0:General, 1:Emergency, 2:ICU, 3:Pediatric, 4:Surgical\nChoice: ";
-    int type = safe_input_int(0, 4);
-    CaseType major = (CaseType)type;
+    cin >> type;
 
+    CaseType major = (CaseType)type;
     Doctor d(id, name, age, major);
-    
-    // Add to the correct department list
+
     doctorsByMajor[major]->addDoctor(d);
     cout << "Doctor " << name << " assigned to " << type << " department." << endl;
 }
 
 void HospitalSystem::showDoctors()
 {
+    int type;
     cout << "Select Department to View:\n0:General, 1:Emergency, 2:ICU, 3:Pediatric, 4:Surgical\nChoice: ";
-    int type = safe_input_int(0, 4);
-    
+    cin >> type;
+
     cout << "\n--- DOCTOR LIST (" << type << ") ---" << endl;
     doctorsByMajor[(CaseType)type]->display();
 }
 
-// ================= CORE WORKFLOW (TRIAGE & TREATMENT) =================
+// ================= CORE WORKFLOW =================
 
 void HospitalSystem::assignPatient()
 {
-    if (patientQueue.isEmpty()) {
+    if (patientQueue.isEmpty())
+    {
         cout << "No patients in the waiting room." << endl;
         return;
     }
 
-    // 1. Peek at the next patient to see what they need
     Patient nextP = patientQueue.next();
     CaseType neededMajor = nextP.getCaseType();
 
     cout << "\n=== ASSIGN PATIENT TO DOCTOR ===" << endl;
     cout << "Patient: " << nextP.getName() << " (Needs Dept: " << neededMajor << ")" << endl;
 
-    DoctorList* deptList = doctorsByMajor[neededMajor];
+    DoctorList *deptList = doctorsByMajor[neededMajor];
 
-    if (deptList->isEmpty()) {
+    if (deptList->isEmpty())
+    {
         cout << "CRITICAL: No doctors available in this department!" << endl;
         return;
     }
 
-    // 2. Show compatible doctors
     cout << "Available Doctors in this Department:" << endl;
     deptList->display();
 
+    int docId;
     cout << "Enter Doctor ID to assign: ";
-    int docId = safe_input_int(1, 999999);
+    cin >> docId;
 
-    // 3. Find the specific queue for that doctor
-    PatientQueue* docQueue = deptList->SearchById(docId);
+    PatientQueue *docQueue = deptList->SearchById(docId);
 
-    if (docQueue != nullptr) {
-        // Move the patient: Dequeue from Waiting Room -> Enqueue to Doctor
+    if (docQueue != nullptr)
+    {
         Patient p = patientQueue.dequeue();
         docQueue->enqueue(p);
         cout << "Success: Patient transferred to Dr. ID " << docId << endl;
-    } else {
+    }
+    else
+    {
         cout << "Error: Invalid Doctor ID." << endl;
     }
 }
@@ -157,23 +163,25 @@ void HospitalSystem::assignPatient()
 void HospitalSystem::treatPatient()
 {
     cout << "\n=== DOCTOR TREATMENT PORTAL ===" << endl;
-    
+
+    int type;
     cout << "Select Department:\n0:General, 1:Emergency, 2:ICU, 3:Pediatric, 4:Surgical\nChoice: ";
-    int type = safe_input_int(0, 4);
+    cin >> type;
 
-    DoctorList* list = doctorsByMajor[(CaseType)type];
+    DoctorList *list = doctorsByMajor[(CaseType)type];
 
-    if (list->isEmpty()) {
+    if (list->isEmpty())
+    {
         cout << "No doctors in this department." << endl;
         return;
     }
 
     list->display();
 
+    int docId;
     cout << "Enter Doctor ID performing the treatment: ";
-    int docId = safe_input_int(1, 999999);
+    cin >> docId;
 
-    // Note: This relies on the treatPatient(id) function in DoctorList.h
     list->treatPatient(docId);
 }
 
@@ -202,19 +210,35 @@ void HospitalSystem::run()
     while (true)
     {
         printMainMenu();
-        choice = safe_input_int(0, 7);
+        cin >> choice;
 
         switch (choice)
         {
-        case 1: addPatient(); break;
-        case 2: addDoctor(); break;
-        case 3: assignPatient(); break;
-        case 4: treatPatient(); break;
-        case 5: showWaitingRoom(); break;
-        case 6: showDoctors(); break;
-        case 7: deletePatient(); break;
-        case 0: return;
-        default: cout << "Invalid option." << endl;
+        case 1:
+            addPatient();
+            break;
+        case 2:
+            addDoctor();
+            break;
+        case 3:
+            assignPatient();
+            break;
+        case 4:
+            treatPatient();
+            break;
+        case 5:
+            showWaitingRoom();
+            break;
+        case 6:
+            showDoctors();
+            break;
+        case 7:
+            deletePatient();
+            break;
+        case 0:
+            return;
+        default:
+            cout << "Invalid option." << endl;
         }
     }
 }

@@ -8,40 +8,35 @@
 #include "PatientQueue.h"
 #include "Doctor.h"
 #include "DoctorList.h"
-#include "SafeInput.h" // Ensure this file is in your directory
+
 
 using namespace std;
 
 class HospitalSystem
 {
 private:
-    // 1. Database of Doctors organized by Department
     map<CaseType, DoctorList *> doctorsByMajor;
-
-    // 2. The "Waiting Room" (Global Queue for new arrivals)
     PatientQueue patientQueue;
 
 public:
-    // Constructor & Destructor
     HospitalSystem();
     ~HospitalSystem();
 
-    // Main Application Loop
-    void run(); 
+    void run();
 
     // --- Patient Management ---
-    void addPatient();       // Register new patient to Waiting Room
-    void deletePatient();    // Remove patient from Waiting Room (by ID)
-    void showWaitingRoom();  // View all unassigned patients
+    void addPatient();
+    void deletePatient();
+    void showWaitingRoom();
 
     // --- Doctor Management ---
-    void addDoctor();        // Hire new doctor
-    void showDoctors();      // View doctors in a specific department
+    void addDoctor();
+    void showDoctors();
 
-    // --- The Core Workflow ---
-    void assignPatient();    // Move Patient: Waiting Room -> Doctor's Queue
-    void treatPatient();     // Doctor treats patient (Removes from system)
-    
+    // --- Core Workflow ---
+    void assignPatient();
+    void treatPatient();
+
     // --- Helper ---
     void printMainMenu();
 };
