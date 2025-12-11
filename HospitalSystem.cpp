@@ -307,6 +307,31 @@ void HospitalSystem::displayDoctors()
     // we can also use display function which on list of doctors but this is more formal
 }
 
+void HospitalSystem::patientsCount()
+{
+    int assigned = 0;
+    int waitingCnt = waiting.getQueueCount();
+    for (auto &[maj, docList] : doctorsByMajor)
+    {
+        ListNode *curr = docList->getHead();
+        while (curr != nullptr)
+        {
+            assigned += curr->Patients.getQueueCount();
+            curr = curr->next;
+        }
+    }
+
+    int total = assigned + waitingCnt;
+    cout << "\n+==================================================+\n";
+    cout << "|                PATIENTS COUNT SUMMARY            |\n";
+    cout << "+==================================================+\n";
+    cout << "Assigned Patients : " << assigned << "\n";
+    cout << "Waiting Patients  : " << waitingCnt << "\n";
+    cout << "----------------------------------------------------\n";
+    cout << "Total Patients    : " << total << "\n";
+    cout << "+==================================================+\n";
+}
+
 // ================= MAIN MENU & PATIENT MENU & DOCTOR MENU & closing =================
 
 void HospitalSystem::printMainMenu() // welcome menu

@@ -28,27 +28,27 @@ public:
     void run();
 
     // --- Patient Management ---
-    void registerPatient();
-    void deletePatient();
-    void searchPatientByID();
+    void registerPatient();   // done
+    void deletePatient();     // sanad
+    void searchPatientByID(); // moza
 
     // --- Doctor Management ---
     void hireDoctor();
     void fireDoctor();
     void searchDoctorByID();
     void searchDoctorByDepartment();
-    void showDoctorQueue();
+    void showDoctorQueue(); // sanad
 
     // Main menu
-    void printMainMenu();
-    void patientManagement();
-    void doctorManagement();
-    void printExitScreen();
-    // void treatPatient();              // dequeue patient from each queue
-    // void patientsCount();            // we will iterate on majors
-    // void doctorsCount();             // we will iterate on majors and LinkedList
-    void displayPatients(); // here we will display id , name, Major, Doctor
-    void displayDoctors();  // here we will display id , name only
+    void printMainMenu();     // done
+    void patientManagement(); // done
+    void doctorManagement();  // done
+    void printExitScreen();   // done
+    void treatPatient();      // dequeue patient from each queue
+    void patientsCount();     // we will iterate on majors
+    void doctorsCount();      // we will iterate on majors and LinkedList
+    void displayPatients();   // done  // here we will display id , name, Major, Doctor
+    void displayDoctors();    // done  // here we will display id , name only
 };
 
 #endif
