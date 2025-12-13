@@ -166,7 +166,47 @@ void HospitalSystem::registerPatient()
     cout << "+==================================================+\n";
 }
 
-void HospitalSystem::deletePatient() {} // sanad
+void HospitalSystem::deletePatient()
+{
+    cout << "\n";
+    cout << "+==================================================+\n";
+    cout << "|              DELETE PATIENT BY ID                |\n";
+    cout << "+==================================================+\n";
+
+    cout << "Enter Patient ID to search: ";
+    int id = safe_input_int(1, INT_MAX);
+
+    bool found = false;
+
+    // 1. Search in the General Waiting List (No doctor assigned yet)
+    QueueNode *currP = waiting.getHead();
+    if ( waiting.searchPatientbool(id) )
+    {
+        cout << "Patient " << currP->patient.getName() << " has been deleted from the Waiting list\n" ;
+        waiting.removeById( id ) ;
+        return ;
+    }
+    
+    // 2. Search in every Doctor's Patient Queue
+    // We iterate through every major -> every doctor -> their patient queue
+    for (auto &[major, docList] : doctorsByMajor)
+    {
+        ListNode *currDoc = docList->getHead();
+        while ( currDoc != nullptr )
+        {
+            if ( currDoc->Patients.searchPatientbool(id) )
+            {
+                cout << "Patient " << currDoc->Patients.searchPatient(id).getName() << " has been deleted from Dr. " << currDoc->doctor.getName() << " queue\n" ;
+                currDoc->Patients.removeById( id ) ;
+                return ;
+            }
+        }
+    }
+
+    // 3. If the loop finishes and we haven't returned, the patient was not found
+    cout << "\nPatient with ID " << id << " not found in any patient queue.\n";
+    cout << "+==================================================+\n";
+} // sanad
 
 void HospitalSystem::searchPatientByID()
 {
@@ -309,7 +349,67 @@ void HospitalSystem::fireDoctor() // fire a doctor with id (Omar Mohamed)
 
 void HospitalSystem::searchDoctorByID() {}
 void HospitalSystem::searchDoctorByDepartment() {}
-void HospitalSystem::showDoctorQueue() {} // sanad
+void HospitalSystem::showDoctorQueue()
+{
+    cout << "\n";
+    cout << "+==================================================+\n";
+    cout << "|                 Show Doctor's queue              |\n";
+    cout << "+==================================================+\n";
+    cout << "Enter Doctor ID (integer): ";
+    int id = safe_input_int(1, INT_MAX);
+    if (validateId.count(id) == 0)
+    {
+        cout << "Invalid Id, Please Enter a Correct Doctor Id!\n";
+        return;
+    }
+
+    Person dr = validateId[id];
+    CaseType ct = dr.getCaseType();
+    DoctorList *list = doctorsByMajor[ct];
+
+    if (list->isEmpty() || list->SearchById(id) == nullptr)
+    {
+        cout << "Invalid Id, Please Enter a Correct Doctor Id!\n";
+        return;
+    }
+    else
+    {
+        ListNode *curr = list->getHead() ;
+        while ( curr != nullptr )
+        {
+            if ( curr->doctor.getId() == id )
+            {
+                cout << "Doctor ID : " << curr->doctor.getId() << "\n";
+                cout << "Name      : " << curr->doctor.getName() << "\n";
+                cout << "\n+=============== Doctor's queue ===============+\n" ;
+                if ( curr->Patients.getQueueCount() == 0 )
+                {
+                    cout << "No patients on this doctor's queue\n" ;
+                }
+                else
+                {
+                    QueueNode *Node = curr->Patients.getHead() ;
+                    cout << "| "
+                    << left << setw(5) << "ID"
+                    << "| " << setw(20) << "Name"
+                    << "| " << setw(5) << "Age"
+                    << '\n' ;
+                    cout << "+----------------------------+" ;
+                    while ( Node != nullptr )
+                    {
+                        cout << "| "
+                        << left << setw(5) << Node->patient.getId()
+                        << "| " << setw(20) << Node->patient.getName()
+                        << "| " << setw(5) << Node->patient.getAge()
+                        << '\n' ;
+                        Node = Node->next ;
+                    }
+                }
+            }
+        }
+    }
+    cout << "+==================================================+\n";
+} // sanad
 // ================= General =================
 void HospitalSystem::displayPatients()
 {

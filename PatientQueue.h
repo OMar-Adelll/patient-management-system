@@ -47,6 +47,14 @@ public:
     {
         return head;
     }
+    void MoveHead()
+    {
+        head = head->next ;
+    }
+    void SetTailToNull()
+    {
+        tail = nullptr ;
+    }
 
     // Enqueue to add patient
     void enqueue(Patient patient)
@@ -144,6 +152,25 @@ public:
 
         cout << "This patient is not in this queue!" << nl;
         return Patient();
+    }
+    bool searchPatientbool(int id) // overloaded function to search directly by id
+    {
+        if (isEmpty())
+        {
+            return 0 ;
+        }
+
+        QueueNode *trav = head;
+
+        while (trav != nullptr)
+        {
+            if (trav->patient.getId() == id)
+                return 1 ;
+
+            trav = trav->next;
+        }
+
+        return 0 ;
     }
 
     // Add this inside class PatientQueue in PatientQueue.h
