@@ -36,8 +36,8 @@ public:
     // --- Doctor Management ---
     void hireDoctor();               // done
     void fireDoctor();               // done
-    void searchDoctorByID();         // under work
-    void searchDoctorByDepartment(); // under work
+    void searchDoctorByID();         // done
+    void searchDoctorByDepartment(); // done
     void showDoctorQueue();          // sanad
 
     // Main menu
