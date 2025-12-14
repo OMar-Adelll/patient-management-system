@@ -837,6 +837,15 @@ void HospitalSystem::run()
         case 2:
             doctorManagement();
             break;
+        case 3:
+            treatPatient();
+            break;
+        case 5:
+            doctorsCount();
+            break;
+        case 6:
+            patientsCount();
+            break;
 
         case 0:
             printExitScreen();
