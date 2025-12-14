@@ -230,7 +230,7 @@ void HospitalSystem::searchPatientByID()
             cout << "|               PATIENT INFORMATION                 |\n";
             cout << "+==================================================+\n";
             currP->patient.display();
-            cout << "Status        : In Waiting List (Not assigned to a doctor)\n";
+            cout << "Status: In Waiting List (Not assigned to a doctor)\n";
             cout << "+==================================================+\n";
             return;
         }
