@@ -38,7 +38,7 @@ public:
     void fireDoctor();               // done
     void searchDoctorByID();         // done
     void searchDoctorByDepartment(); // done
-    void showDoctorQueue();          // sanad
+    void showDoctorQueue();          // done
 
     // Main menu
     void printMainMenu();     // done
