@@ -80,7 +80,7 @@ HospitalSystem::HospitalSystem() // allocate memory (create list of doctors for 
 
 HospitalSystem::~HospitalSystem() // save memory leak
 {
-    cout << "System shutting down... Cleaning up memory." << endl;
+    
     for (auto const &[key, listPtr] : doctorsByMajor)
     {
         delete listPtr;
@@ -846,6 +846,13 @@ void HospitalSystem::run()
         case 5:
             patientsCount();
             break;
+        case 6:
+            displayDoctors();
+            break;
+        case 7:
+            displayPatients();
+            break;
+            
 
         case 0:
             printExitScreen();
