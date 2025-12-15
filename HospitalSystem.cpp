@@ -273,7 +273,81 @@ void HospitalSystem::searchPatientByID()
     }
     cout << "+==================================================+\n";
 }
+// In HospitalSystem.cpp
 
+void HospitalSystem::assignPatientFromWaiting()
+{
+    cout << "\n";
+    cout << "+==================================================+\n";
+    cout << "|         ASSIGN PATIENT FROM WAITING LIST         |\n";
+    cout << "+==================================================+\n";
+
+    // 1. Check if waiting list has patients
+    if (waiting.isEmpty())
+    {
+        cout << "The waiting list is empty. No patients to assign.\n";
+        cout << "+==================================================+\n";
+        return;
+    }
+
+    // 2. Display patients currently in waiting
+    cout << "--- Current Waiting List ---\n";
+    waiting.display();
+
+    // 3. Select Patient
+    cout << "Enter Patient ID to assign: ";
+    int pId = safe_input_int(1, INT_MAX);
+
+    // Verify patient exists in waiting list
+    if (!waiting.searchPatientbool(pId))
+    {
+        cout << "Patient ID " << pId << " not found in the waiting list.\n";
+        return;
+    }
+
+    // 4. Retrieve patient info to identify their CaseType (Major)
+    Patient tempP = waiting.searchPatient(pId);
+    CaseType requiredMajor = tempP.getCaseType();
+
+    // 5. Get the Doctor list for this major
+    DoctorList *docList = doctorsByMajor[requiredMajor];
+
+    if (docList == nullptr || docList->isEmpty())
+    {
+        cout << "\nERROR: No doctors available in " << caseTypeTostring(requiredMajor) << " department.\n";
+        cout << "Cannot assign this patient at the moment.\n";
+        return;
+    }
+
+    // 6. Show available doctors
+    cout << "\nAvailable Doctors in " << caseTypeTostring(requiredMajor) << " Department:\n";
+    docList->display();
+
+    // 7. Select Doctor
+    cout << "Enter Doctor ID to assign the patient to: ";
+    int dId = safe_input_int(1, INT_MAX);
+
+    ListNode *docNode = docList->SearchById(dId);
+
+    if (docNode == nullptr)
+    {
+        cout << "Invalid Doctor ID. Assignment cancelled.\n";
+        return;
+    }
+
+    // 8. PERFORM THE MOVE
+    // Remove from waiting list and get the object
+    Patient pToMove = waiting.removeById(pId);
+
+    // Enqueue to the specific doctor's queue
+    docNode->Patients.enqueue(pToMove);
+
+    cout << "\nSUCCESS: Patient " << pToMove.getName()
+         << " (ID: " << pId << ") has been moved from Waiting List\n"
+         << "to Dr. " << docNode->doctor.getName() << "'s queue.\n";
+
+    cout << "+==================================================+\n";
+}
 // In HospitalSystem.cpp
 
 void HospitalSystem::assignPatientFromWaiting()
@@ -823,9 +897,10 @@ void HospitalSystem::printExitScreen() // exit menu
     cout << "|                                                  |\n";
     cout << "+==================================================+\n";
 }
-void HospitalSystem::patientManagement() // this menu to to manage patients
-{
+// In HospitalSystem.cpp
 
+void HospitalSystem::patientManagement()
+{
     int choice;
 
     while (true)
@@ -838,14 +913,14 @@ void HospitalSystem::patientManagement() // this menu to to manage patients
         cout << "|   1) Register Patient                            |\n";
         cout << "|   2) Delete Patient                              |\n";
         cout << "|   3) Search Patient by ID                        |\n";
-        cout << "|   4) Assign Patient from Waiting List            |\n"; 
+        cout << "|   4) Assign Patient from Waiting List            |\n";
         cout << "|                                                  |\n";
         cout << "|   0) Back to Main Menu                           |\n";
         cout << "|                                                  |\n";
         cout << "+==================================================+\n";
         cout << "Choose an option: ";
 
-        choice = safe_input_int(0, 4); // <--- Update max range to 4
+        choice = safe_input_int(0, 4);
 
         switch (choice)
         {
@@ -862,7 +937,7 @@ void HospitalSystem::patientManagement() // this menu to to manage patients
             break;
 
         case 4:
-            assignPatientFromWaiting(); // <--- Call new function
+            assignPatientFromWaiting();
             break;
 
         case 0:
