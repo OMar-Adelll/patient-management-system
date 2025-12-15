@@ -124,14 +124,54 @@ void HospitalSystem::registerPatient()
 
     DoctorList *list = doctorsByMajor[ct];
 
-    if (list == nullptr || list->isEmpty())
-    {
-        // cout << "No doctors availalbe  in the department!" << nl;
-        cout << "Patient will be pushed into the WAITING LIST.\n";
-        waiting.enqueue(p);
-        cout << name << " added to WATTING LIST." << nl;
-        return;
-    }
+if (list == nullptr || list->isEmpty())
+{
+    cout << "No doctors available in the department!\n";
+    cout << "Patient will be pushed into the WAITING LIST.\n";
+    waiting.enqueue(p);
+    cout << name << " added to WAITING LIST.\n";
+    return;
+}
+
+cout << "\nDo you want to assign this patient to a doctor now? (1=Yes, 0=No): ";
+int assignNow = safe_input_int(0, 1);
+
+if (assignNow == 0)
+{
+    cout << "Patient will be added to the WAITING LIST.\n";
+    waiting.enqueue(p);
+    cout << name << " added to WAITING LIST.\n";
+    return;
+}
+
+cout << "\n+==================================================+\n";
+cout << "|         AVAILABLE DOCTORS IN THIS DEPARTMENT     |\n";
+cout << "+==================================================+\n";
+ListNode *curr = list->getHead();
+while (curr != nullptr)
+{
+    cout << "Doctor ID : " << curr->doctor.getId() << "\n";
+    cout << "Name      : " << curr->doctor.getName() << "\n";
+    cout << "Queue     : " << curr->Patients.getQueueCount() << " waiting\n";
+    cout << "------------------------------------------\n";
+    curr = curr->next;
+}
+
+cout << "Enter Doctor ID to assign the patient: ";
+int choId = safe_input_int(1, INT_MAX);
+ListNode *doc = list->SearchById(choId);
+
+if (doc == nullptr)
+{
+    cout << "Invalid Doctor ID! Patient moved to WAITING LIST.\n";
+    waiting.enqueue(p);
+    return;
+}
+
+doc->Patients.enqueue(p);
+cout << "\nPatient " << p.getName()
+     << " assigned to Dr. " << doc->doctor.getName() << "'s queue.\n";
+cout << "+==================================================+\n";
 }
 
 void HospitalSystem::deletePatient()
