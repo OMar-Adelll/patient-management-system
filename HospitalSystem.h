@@ -29,9 +29,9 @@ public:
     void run();
 
     // --- Patient Management ---
-    void registerPatient();   
-    void deletePatient();     
-    void searchPatientByID(); 
+    void registerPatient();
+    void deletePatient();
+    void searchPatientByID();
     void assignPatientFromWaiting();
 
     // --- Doctor Management ---
