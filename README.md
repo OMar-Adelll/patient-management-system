@@ -89,7 +89,7 @@ This system simulates real hospital operations through a text-based menu. It dem
 This **Premium Edition** was proudly developed by the following talented engineers:
 
 - **Omar Adel**
-  [![GitHub](https://img.shields.io/badge/-OMarAdell-black?style=flat&logo=github)](https://github.com/OMarAdell)
+  [![GitHub](https://img.shields.io/badge/-OMarAdell-black?style=flat&logo=github)](https://github.com/OMar-Adelll)
 
 - **Moaz Waleed**
   [![GitHub](https://img.shields.io/badge/-Moza202-black?style=flat&logo=github)](https://github.com/Moza202)
